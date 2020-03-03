@@ -14,7 +14,10 @@ namespace GlickoRank.Helpers
     {
         public static void UpdateDatabase()
         {
-            //foreach(Models.Character character in )
+            foreach(Models.Character character in )
+            {
+
+            }
         }
 
         public static void GetCharacter()

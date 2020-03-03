@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlickoRank", "GlickoRank.csproj", "{37B7BB90-9136-4286-853E-F0120258D1B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlickoRank", "GlickoRank\GlickoRank.csproj", "{EE488408-28A5-4C95-B72F-3958ACEA9C03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BungieAPI", "..\BungieAPI\BungieAPI.csproj", "{8271C11E-C0A1-4496-A6C4-D934F7DE0D72}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BungieAPI", "BungieAPI\BungieAPI.csproj", "{FCFC29FF-DDFE-4523-B357-329A21BECA8A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{37B7BB90-9136-4286-853E-F0120258D1B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{37B7BB90-9136-4286-853E-F0120258D1B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{37B7BB90-9136-4286-853E-F0120258D1B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{37B7BB90-9136-4286-853E-F0120258D1B7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8271C11E-C0A1-4496-A6C4-D934F7DE0D72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8271C11E-C0A1-4496-A6C4-D934F7DE0D72}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8271C11E-C0A1-4496-A6C4-D934F7DE0D72}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8271C11E-C0A1-4496-A6C4-D934F7DE0D72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE488408-28A5-4C95-B72F-3958ACEA9C03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE488408-28A5-4C95-B72F-3958ACEA9C03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE488408-28A5-4C95-B72F-3958ACEA9C03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE488408-28A5-4C95-B72F-3958ACEA9C03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCFC29FF-DDFE-4523-B357-329A21BECA8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCFC29FF-DDFE-4523-B357-329A21BECA8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCFC29FF-DDFE-4523-B357-329A21BECA8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCFC29FF-DDFE-4523-B357-329A21BECA8A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
