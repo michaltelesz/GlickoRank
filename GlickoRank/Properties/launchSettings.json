@@ -3,8 +3,8 @@
     "windowsAuthentication": false, 
     "anonymousAuthentication": true, 
     "iisExpress": {
-      "applicationUrl": "http://localhost:64954",
-      "sslPort": 0
+      "applicationUrl": "http://localhost:55739",
+      "sslPort": 44340
     }
   },
   "profiles": {
@@ -18,7 +18,7 @@
     "GlickoRank": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:5000",
+      "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

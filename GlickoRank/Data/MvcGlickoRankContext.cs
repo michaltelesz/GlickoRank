@@ -15,5 +15,10 @@ namespace GlickoRank.Data
         }
 
         public DbSet<Character> Character { get; set; }
+        public DbSet<Activity> Activity { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+        }
     }
 }

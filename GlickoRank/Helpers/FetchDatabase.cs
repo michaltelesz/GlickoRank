@@ -1,6 +1,4 @@
-﻿using BungieAPI;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,10 +12,10 @@ namespace GlickoRank.Helpers
     {
         public static void UpdateDatabase()
         {
-            foreach(Models.Character character in )
-            {
+            //foreach (Models.Character character in )
+            //{
 
-            }
+            //}
         }
 
         public static void GetCharacter()
@@ -38,7 +36,7 @@ namespace GlickoRank.Helpers
 
                     JEnumerable<JToken> results = jsonResponse["Response"]["characters"]["data"].Children();
                     Dictionary<string, JToken> results2 = results.ToDictionary(k => ((JProperty)k).Name);
-                    Character result3 = ((JProperty)results2.First().Value).Value.ToObject<Character>();
+                    BungieAPI.Character result3 = ((JProperty)results2.First().Value).Value.ToObject<BungieAPI.Character>();
                     Console.WriteLine();
                 }
             }

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GlickoRank.Migrations
 {
     [DbContext(typeof(MvcGlickoRankContext))]
-    [Migration("20200303085545_InitialCreate")]
+    [Migration("20200303184449_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
