@@ -4,14 +4,16 @@ using GlickoRank.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GlickoRank.Migrations
 {
     [DbContext(typeof(MvcGlickoRankContext))]
-    partial class MvcGlickoRankContextModelSnapshot : ModelSnapshot
+    [Migration("20200304095652_AddActivities")]
+    partial class AddActivities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,16 +61,6 @@ namespace GlickoRank.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Character");
-
-                    b.HasData(
-                        new
-                        {
-                            ID = 1,
-                            CharacterId = "2305843009296116294",
-                            MembershipId = "4611686018470345232",
-                            MembershipType = 1,
-                            Name = "MajkPascal_2305843009296116294_1"
-                        });
                 });
 
             modelBuilder.Entity("GlickoRank.Models.CharacterActivity", b =>
@@ -81,8 +73,6 @@ namespace GlickoRank.Migrations
 
                     b.HasKey("CharacterId", "ActivityId");
 
-                    b.HasIndex("ActivityId");
-
                     b.ToTable("CharacterActivity");
                 });
 
@@ -90,7 +80,7 @@ namespace GlickoRank.Migrations
                 {
                     b.HasOne("GlickoRank.Models.Activity", "Activity")
                         .WithMany("CharacterActivities")
-                        .HasForeignKey("ActivityId")
+                        .HasForeignKey("CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
