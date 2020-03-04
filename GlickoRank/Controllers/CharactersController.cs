@@ -37,7 +37,10 @@ namespace GlickoRank.Controllers
         {
             Console.WriteLine("TEST");
             List<Character> characters = await _context.Character.ToListAsync();
+
             int newActivityCount = 0;
+            int newCharacterCount = 0;
+
             foreach (Character character in characters)
             {
                 string baseUriActivities = new Uri($"https://www.bungie.net/Platform/Destiny2/{character.MembershipType}/Account/{character.MembershipId}/Character/{character.CharacterId}/Stats/Activities/?mode=5&count=10").ToString();
@@ -66,8 +69,7 @@ namespace GlickoRank.Controllers
                                     Period = APIactivity.period
                                 };
                                 _context.Activity.Add(newActivity);
-                                newActivityCount++;
-                                Console.WriteLine($"Add Activity: {newActivity.InstanceId} from {newActivity.Period}");
+                                Console.WriteLine($"[{++newActivityCount}] Add Activity: {newActivity.InstanceId} from {newActivity.Period}");
                                 _context.SaveChanges();
                             }
 
@@ -97,7 +99,7 @@ namespace GlickoRank.Controllers
                                             MembershipType = entry.player.destinyUserInfo.membershipType
                                         };
                                         _context.Character.Add(newCharacter);
-                                        Console.WriteLine($"Add Character: {newCharacter.Name}");
+                                        Console.WriteLine($"[{++newCharacterCount}] Add Character: {newCharacter.Name}");
                                         _context.SaveChanges();
                                     }
 
