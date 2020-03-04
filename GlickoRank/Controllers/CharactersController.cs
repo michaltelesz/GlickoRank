@@ -43,7 +43,8 @@ namespace GlickoRank.Controllers
 
             foreach (Character character in characters)
             {
-                string baseUriActivities = new Uri($"https://www.bungie.net/Platform/Destiny2/{character.MembershipType}/Account/{character.MembershipId}/Character/{character.CharacterId}/Stats/Activities/?mode=5&count=10").ToString();
+                Console.WriteLine($"CHARACTER [{character.ID}]");
+                string baseUriActivities = new Uri($"https://www.bungie.net/Platform/Destiny2/{character.MembershipType}/Account/{character.MembershipId}/Character/{character.CharacterId}/Stats/Activities/?mode=19&count=10").ToString();
                 WebRequest requestActivities = WebRequest.Create(baseUriActivities);
                 requestActivities.Headers.Add("x-api-key", "182e7c2874274c45a694c1e8f26744d1");
                 try
@@ -71,57 +72,60 @@ namespace GlickoRank.Controllers
                                 _context.Activity.Add(newActivity);
                                 Console.WriteLine($"[{++newActivityCount}] Add Activity: {newActivity.InstanceId} from {newActivity.Period}");
                                 _context.SaveChanges();
-                            }
 
-                            string baseUriCharacters = new Uri($"http://stats.bungie.net/Platform/Destiny2/Stats/PostGameCarnageReport/{newActivity.InstanceId}/").ToString();
-                            WebRequest requestCharacters = WebRequest.Create(baseUriCharacters);
-                            requestCharacters.Headers.Add("x-api-key", "182e7c2874274c45a694c1e8f26744d1");
+                                /////////////////////////
+                                ///
 
-                            using (WebResponse responseCharacters = requestCharacters.GetResponse())
-                            {
-                                Stream dataStreamCharacters = responseCharacters.GetResponseStream();
-                                StreamReader readerCharacters = new StreamReader(dataStreamCharacters);
-                                string responseFromServerCharacters = readerCharacters.ReadToEnd();
+                                string baseUriCharacters = new Uri($"http://stats.bungie.net/Platform/Destiny2/Stats/PostGameCarnageReport/{newActivity.InstanceId}/").ToString();
+                                WebRequest requestCharacters = WebRequest.Create(baseUriCharacters);
+                                requestCharacters.Headers.Add("x-api-key", "182e7c2874274c45a694c1e8f26744d1");
 
-                                JObject jsonResponseCharacters = JObject.Parse(responseFromServerCharacters);
-
-                                BungieAPI.ActivityReport APIcharacter = jsonResponseCharacters["Response"].ToObject<BungieAPI.ActivityReport>();
-                                foreach (BungieAPI.Entry entry in APIcharacter.entries)
+                                using (WebResponse responseCharacters = requestCharacters.GetResponse())
                                 {
-                                    Character newCharacter = _context.Character.Include(c => c.CharacterActivities).SingleOrDefault(c => c.CharacterId == entry.characterId);
-                                    if (newCharacter == null)
+                                    Stream dataStreamCharacters = responseCharacters.GetResponseStream();
+                                    StreamReader readerCharacters = new StreamReader(dataStreamCharacters);
+                                    string responseFromServerCharacters = readerCharacters.ReadToEnd();
+
+                                    JObject jsonResponseCharacters = JObject.Parse(responseFromServerCharacters);
+
+                                    BungieAPI.ActivityReport APIcharacter = jsonResponseCharacters["Response"].ToObject<BungieAPI.ActivityReport>();
+                                    foreach (BungieAPI.Entry entry in APIcharacter.entries)
                                     {
-                                        newCharacter = new Character
+                                        Character newCharacter = _context.Character.Include(c => c.CharacterActivities).SingleOrDefault(c => c.CharacterId == entry.characterId);
+                                        if (newCharacter == null)
                                         {
-                                            Name = $"{entry.player.destinyUserInfo.displayName}_{entry.player.destinyUserInfo.membershipType}_{entry.characterId}",
-                                            CharacterId = entry.characterId,
-                                            MembershipId = entry.player.destinyUserInfo.membershipId,
-                                            MembershipType = entry.player.destinyUserInfo.membershipType
-                                        };
-                                        _context.Character.Add(newCharacter);
-                                        Console.WriteLine($"[{++newCharacterCount}] Add Character: {newCharacter.Name}");
-                                        _context.SaveChanges();
-                                    }
+                                            newCharacter = new Character
+                                            {
+                                                Name = $"{entry.player.destinyUserInfo.displayName}_{entry.player.destinyUserInfo.membershipType}_{entry.characterId}",
+                                                CharacterId = entry.characterId,
+                                                MembershipId = entry.player.destinyUserInfo.membershipId,
+                                                MembershipType = entry.player.destinyUserInfo.membershipType
+                                            };
+                                            _context.Character.Add(newCharacter);
+                                            Console.WriteLine($"[{++newCharacterCount}] Add Character: {newCharacter.Name}");
+                                            _context.SaveChanges();
+                                        }
 
 
-                                    if (newCharacter.CharacterActivities == null)
-                                    {
-                                        newCharacter.CharacterActivities = new List<CharacterActivity>();
-                                    }
-                                    if (!newCharacter.CharacterActivities.Any(ca => ca.ActivityId == newActivity.ID))
-                                    {
-                                        CharacterActivity newCharacterActivity = new CharacterActivity
+                                        if (newCharacter.CharacterActivities == null)
                                         {
-                                            Activity = newActivity,
-                                            Character = newCharacter
-                                        };
+                                            newCharacter.CharacterActivities = new List<CharacterActivity>();
+                                        }
+                                        if (!newCharacter.CharacterActivities.Any(ca => ca.ActivityId == newActivity.ID))
+                                        {
+                                            CharacterActivity newCharacterActivity = new CharacterActivity
+                                            {
+                                                Activity = newActivity,
+                                                Character = newCharacter
+                                            };
 
-                                        newCharacter.CharacterActivities.Add(newCharacterActivity);
-                                        _context.SaveChanges();
+                                            newCharacter.CharacterActivities.Add(newCharacterActivity);
+                                            _context.SaveChanges();
+                                        }
                                     }
                                 }
+                                _context.SaveChanges();
                             }
-                            _context.SaveChanges();
                         }
                     }
                 }
