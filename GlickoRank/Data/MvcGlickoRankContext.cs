@@ -21,7 +21,7 @@ namespace GlickoRank.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Character>().HasData(new Character { ID = 1, Name = "MajkPascal_2305843009296116294_1", CharacterId = "2305843009296116294", MembershipId = "4611686018470345232", MembershipType = 1 });
+            modelBuilder.Entity<Character>().HasData(new Character { ID = 1, Name = "MajkPascal_1_2305843009296116294", CharacterId = "2305843009296116294", MembershipId = "4611686018470345232", MembershipType = 1 });
 
             modelBuilder.Entity<CharacterActivity>()
             .HasKey(ca => new { ca.CharacterId, ca.ActivityId });
