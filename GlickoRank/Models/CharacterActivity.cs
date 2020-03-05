@@ -14,7 +14,6 @@ namespace GlickoRank.Models
         public int ActivityID { get; set; }
 
         public bool Completed { get; set; }
-        public int Mode { get; set; }
         public int Standing { get; set; }
         public float Score { get; set; }
         public float TeamScore { get; set; }

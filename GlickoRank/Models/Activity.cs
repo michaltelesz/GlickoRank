@@ -11,6 +11,8 @@ namespace GlickoRank.Models
         public DateTime Period { get; set; }
         public string InstanceId { get; set; }
 
+        public int Mode { get; set; }
+
         public virtual ICollection<CharacterActivity> CharacterActivities { get; set; }
     }
 }

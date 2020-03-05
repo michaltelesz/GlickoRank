@@ -33,6 +33,49 @@ namespace GlickoRank.Controllers
         }
 
         [HttpGet]
+        [Route("GetCharacterActivities/{id}")]
+        public async Task<ActionResult<IEnumerable<Activity>>> GetCharacterActivities(int id)
+        {
+            Character character = _context.Character.Find(id);
+            string responseFromServerActivities = ApiHelper.GetRequest($"https://www.bungie.net/Platform/Destiny2/{character.MembershipType}/Account/{character.MembershipId}/Character/{character.CharacterId}/Stats/Activities/?mode=19&count=10");
+            JObject jsonResponseActivities = JObject.Parse(responseFromServerActivities);
+
+            IList<JToken> resultsActivities = jsonResponseActivities["Response"]["activities"].Children().ToList();
+            foreach (JToken tokenActivity in resultsActivities)
+            {
+                BungieAPI.CharacterActivity APIactivity = tokenActivity.ToObject<BungieAPI.CharacterActivity>();
+                Activity newActivity = _context.Activity.SingleOrDefault(a => a.InstanceId == APIactivity.activityDetails.instanceId);
+                if (newActivity == null)
+                {
+                    newActivity = new Activity()
+                    {
+                        InstanceId = APIactivity.activityDetails.instanceId,
+                        Period = APIactivity.period
+                    };
+                    _context.Activity.Add(newActivity);
+                    _context.SaveChanges();
+                }
+
+                if (character.CharacterActivities == null)
+                {
+                    character.CharacterActivities = new List<CharacterActivity>();
+                }
+                if (!character.CharacterActivities.Any(ca => ca.ActivityID == newActivity.ID))
+                {
+                    CharacterActivity newCharacterActivity = new CharacterActivity
+                    {
+                        Activity = newActivity,
+                        Character = character
+                    };
+
+                    character.CharacterActivities.Add(newCharacterActivity);
+                    _context.SaveChanges();
+                }
+            }
+            return _context.CharacterActivity.Include(ca => ca.Character).Where(ca => ca.CharacterID == id).Select(ca => ca.Activity).ToList();
+        }
+
+        [HttpGet]
         [Route("GetAllAssociatedPlayers")]
         public async Task<ActionResult<int>> GetAllAssociatedPlayers()
         {
@@ -115,21 +158,7 @@ namespace GlickoRank.Controllers
                             }
 
 
-                            if (newCharacter.CharacterActivities == null)
-                            {
-                                newCharacter.CharacterActivities = new List<CharacterActivity>();
-                            }
-                            if (!newCharacter.CharacterActivities.Any(ca => ca.ActivityID == newActivity.ID))
-                            {
-                                CharacterActivity newCharacterActivity = new CharacterActivity
-                                {
-                                    Activity = newActivity,
-                                    Character = newCharacter
-                                };
 
-                                newCharacter.CharacterActivities.Add(newCharacterActivity);
-                                _context.SaveChanges();
-                            }
                         }
                         _context.SaveChanges();
                     }
