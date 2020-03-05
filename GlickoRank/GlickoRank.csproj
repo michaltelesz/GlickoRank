@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200305121149_AddCharacterGameModeRank.cs" />
+    <Compile Remove="Migrations\20200305121149_AddCharacterGameModeRank.Designer.cs" />
+    <Compile Remove="Migrations\20200305122309_AddCharacterGameModeRank.cs" />
+    <Compile Remove="Migrations\20200305122309_AddCharacterGameModeRank.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.2" />

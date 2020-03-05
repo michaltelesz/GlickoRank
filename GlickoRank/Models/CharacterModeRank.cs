@@ -5,12 +5,17 @@ using System.Threading.Tasks;
 
 namespace GlickoRank.Models
 {
-    public class CharacterActivity
+    public class CharacterModeRank
     {
+        public int ID { get; set; }
+
         public virtual Character Character { get; set; }
         public int CharacterID { get; set; }
 
-        public virtual Activity Activity { get; set; }
-        public int ActivityID { get; set; }
+        public int Mode { get; set; }
+
+        public float Rating { get; set; }
+        public float RD { get; set; }
+        public float Volatility { get; set; }
     }
 }

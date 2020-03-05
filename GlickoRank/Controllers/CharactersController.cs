@@ -42,13 +42,29 @@ namespace GlickoRank.Controllers
             int newActivityCount = 0;
             int newCharacterCount = 0;
 
-            GlickoPlayer glickoPlayer = new GlickoPlayer { Rating = 1500, RD = 200, Volatility = 0.06f };
-            GlickoResult[] glickoResults = {
-                new GlickoResult{ Player = new GlickoPlayer { Rating = 1400, RD = 30 }, Result = 1 },
-                new GlickoResult{ Player = new GlickoPlayer { Rating = 1550, RD = 100}, Result = 0 },
-                new GlickoResult{ Player = new GlickoPlayer { Rating = 1700, RD = 300}, Result = 0 }
-            };
-            GlickoHelper.CalculateRank(glickoPlayer, glickoResults);
+            //GlickoPlayer glickoPlayer = new GlickoPlayer { Rating = 1500, RD = 200, Volatility = 0.06f };
+            //GlickoResult[] glickoResults = {
+            //    new GlickoResult{ Player = new GlickoPlayer { Rating = 1400, RD = 30 }, Result = 1 },
+            //    new GlickoResult{ Player = new GlickoPlayer { Rating = 1550, RD = 100}, Result = 0 },
+            //    new GlickoResult{ Player = new GlickoPlayer { Rating = 1700, RD = 300}, Result = 0 }
+            //};
+            //GlickoPlayer glickoPlayerResult = GlickoHelper.CalculateRank(glickoPlayer, glickoResults);
+
+            //GlickoPlayer glickoPlayer2 = new GlickoPlayer { Rating = 1700, RD = 300, Volatility = 0.06f };
+            //GlickoResult[] glickoResults2 = {
+            //    new GlickoResult{ Player = new GlickoPlayer { Rating = 1500, RD = 200 }, Result = 1 },
+            //    new GlickoResult{ Player = new GlickoPlayer { Rating = 1550, RD = 100}, Result = 0.5f },
+            //    new GlickoResult{ Player = new GlickoPlayer { Rating = 1400, RD = 30}, Result = 1 }
+            //};
+            //GlickoPlayer glickoPlayerResult2 = GlickoHelper.CalculateRank(glickoPlayer2, glickoResults2);
+
+            //GlickoPlayer glickoPlayer3 = new GlickoPlayer { Rating = 1700, RD = 300, Volatility = 0.06f };
+            //GlickoResult[] glickoResults3 = {
+            //    new GlickoResult{ Player = new GlickoPlayer { Rating = glickoPlayerResult.Rating, RD = glickoPlayerResult.RD }, Result = 1 },
+            //    new GlickoResult{ Player = new GlickoPlayer { Rating = 1550, RD = 100}, Result = 0.5f },
+            //    new GlickoResult{ Player = new GlickoPlayer { Rating = 1400, RD = 30}, Result = 1 }
+            //};
+            //GlickoPlayer glickoPlayerResult3 = GlickoHelper.CalculateRank(glickoPlayer3, glickoResults3);
 
             foreach (Character character in characters)
             {
@@ -103,7 +119,7 @@ namespace GlickoRank.Controllers
                             {
                                 newCharacter.CharacterActivities = new List<CharacterActivity>();
                             }
-                            if (!newCharacter.CharacterActivities.Any(ca => ca.ActivityId == newActivity.ID))
+                            if (!newCharacter.CharacterActivities.Any(ca => ca.ActivityID == newActivity.ID))
                             {
                                 CharacterActivity newCharacterActivity = new CharacterActivity
                                 {
