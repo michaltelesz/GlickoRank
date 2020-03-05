@@ -19,6 +19,7 @@ namespace GlickoRank.Data
 
         public DbSet<CharacterActivity> CharacterActivity { get; set; }
         public DbSet<CharacterModeRank> CharacterModeRank { get; set; }
+        public DbSet<CharacterActivityModeRank> CharacterActivityModeRank { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -40,6 +41,10 @@ namespace GlickoRank.Data
             modelBuilder.Entity<CharacterModeRank>().Property(r => r.Rating).HasDefaultValue(1500f);
             modelBuilder.Entity<CharacterModeRank>().Property(r => r.RD).HasDefaultValue(350f);
             modelBuilder.Entity<CharacterModeRank>().Property(r => r.Volatility).HasDefaultValue(0.06f);
+
+            modelBuilder.Entity<CharacterActivityModeRank>().Property(r => r.Rating).HasDefaultValue(1500f);
+            modelBuilder.Entity<CharacterActivityModeRank>().Property(r => r.RD).HasDefaultValue(350f);
+            modelBuilder.Entity<CharacterActivityModeRank>().Property(r => r.Volatility).HasDefaultValue(0.06f);
         }
     }
 }

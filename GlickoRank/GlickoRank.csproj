@@ -9,6 +9,10 @@
     <Compile Remove="Migrations\20200305121149_AddCharacterGameModeRank.Designer.cs" />
     <Compile Remove="Migrations\20200305122309_AddCharacterGameModeRank.cs" />
     <Compile Remove="Migrations\20200305122309_AddCharacterGameModeRank.Designer.cs" />
+    <Compile Remove="Migrations\20200305133439_AddCharacterActivityRank.cs" />
+    <Compile Remove="Migrations\20200305133439_AddCharacterActivityRank.Designer.cs" />
+    <Compile Remove="Migrations\20200305133613_AddCharacterActivityModeRank.cs" />
+    <Compile Remove="Migrations\20200305133613_AddCharacterActivityModeRank.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
