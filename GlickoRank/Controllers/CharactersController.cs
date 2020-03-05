@@ -42,6 +42,14 @@ namespace GlickoRank.Controllers
             int newActivityCount = 0;
             int newCharacterCount = 0;
 
+            GlickoPlayer glickoPlayer = new GlickoPlayer { Rating = 1500, RD = 200, Volatility = 0.06f };
+            GlickoResult[] glickoResults = {
+                new GlickoResult{ Player = new GlickoPlayer { Rating = 1400, RD = 30 }, Result = 1 },
+                new GlickoResult{ Player = new GlickoPlayer { Rating = 1550, RD = 100}, Result = 0 },
+                new GlickoResult{ Player = new GlickoPlayer { Rating = 1700, RD = 300}, Result = 0 }
+            };
+            GlickoHelper.CalculateRank(glickoPlayer, glickoResults);
+
             foreach (Character character in characters)
             {
                 Console.WriteLine($"CHARACTER [{character.ID}]");
