@@ -32,54 +32,112 @@ namespace GlickoRank.Controllers
             return await _context.Character.ToListAsync();
         }
 
-        [HttpGet]
-        [Route("GetCharacterActivities/{id}")]
-        public async Task<ActionResult<IEnumerable<Activity>>> GetCharacterActivities(int id)
+        private IList<Activity> GetCharacterActivities(int id, DateTime startDate)
         {
-            Character character = _context.Character.Find(id);
-            string responseFromServerActivities = ApiHelper.GetRequest($"https://www.bungie.net/Platform/Destiny2/{character.MembershipType}/Account/{character.MembershipId}/Character/{character.CharacterId}/Stats/Activities/?mode=19&count=10");
-            JObject jsonResponseActivities = JObject.Parse(responseFromServerActivities);
-
-            IList<JToken> resultsActivities = jsonResponseActivities["Response"]["activities"].Children().ToList();
-            foreach (JToken tokenActivity in resultsActivities)
+            Character character = _context.Character.Include(c => c.CharacterActivities).SingleOrDefault(c => c.ID == id);
+            if (character != null)
             {
-                BungieAPI.CharacterActivity APIactivity = tokenActivity.ToObject<BungieAPI.CharacterActivity>();
-                Activity newActivity = _context.Activity.SingleOrDefault(a => a.InstanceId == APIactivity.activityDetails.instanceId);
-                if (newActivity == null)
+                int i = 0;
+                IList<Activity> activities = new List<Activity>();
+                bool breakWhile = false;
+                do
                 {
-                    newActivity = new Activity()
+                    string responseFromServerActivities = ApiHelper.GetRequest($"https://www.bungie.net/Platform/Destiny2/{character.MembershipType}/Account/{character.MembershipId}/Character/{character.CharacterId}/Stats/Activities/?mode=19&count=5&page={i}");
+                    if (responseFromServerActivities != null)
                     {
-                        InstanceId = APIactivity.activityDetails.instanceId,
-                        Period = APIactivity.period
-                    };
-                    _context.Activity.Add(newActivity);
-                    _context.SaveChanges();
-                }
+                        JObject jsonResponseActivities = JObject.Parse(responseFromServerActivities);
 
-                if (character.CharacterActivities == null)
-                {
-                    character.CharacterActivities = new List<CharacterActivity>();
-                }
-                if (!character.CharacterActivities.Any(ca => ca.ActivityID == newActivity.ID))
-                {
-                    CharacterActivity newCharacterActivity = new CharacterActivity
-                    {
-                        Activity = newActivity,
-                        Character = character
-                    };
+                        IList<JToken> resultsActivities = jsonResponseActivities["Response"]["activities"]?.Children().ToList();
+                        if (resultsActivities == null)
+                        {
+                            break;
+                        }
+                        foreach (JToken tokenActivity in resultsActivities)
+                        {
+                            BungieAPI.CharacterActivity APIactivity = tokenActivity.ToObject<BungieAPI.CharacterActivity>();
+                            Activity activity = _context.Activity.SingleOrDefault(a => a.InstanceId == APIactivity.activityDetails.instanceId);
+                            if (activity == null)
+                            {
+                                activity = new Activity()
+                                {
+                                    InstanceId = APIactivity.activityDetails.instanceId,
+                                    Period = APIactivity.period,
+                                    Mode = 19
+                                };
+                            }
 
-                    character.CharacterActivities.Add(newCharacterActivity);
-                    _context.SaveChanges();
-                }
+                            if (activity.Period < startDate)
+                            {
+                                breakWhile = true;
+                                break;
+                            }
+
+                            activities.Add(activity);
+                        }
+                        i++;
+                    }
+                } while (activities.Count > 0 && !breakWhile);
+                return activities;
             }
-            return _context.CharacterActivity.Include(ca => ca.Character).Where(ca => ca.CharacterID == id).Select(ca => ca.Activity).ToList();
+            return null;
         }
+
+        //[HttpGet]
+        //[Route("GetCharacterActivities/{id}")]
+        //public async Task<ActionResult<int>> GetCharacterActivities(int id)
+        //{
+        //    Character character = _context.Character.Include(c => c.CharacterActivities).SingleOrDefault(c => c.ID == id);
+        //    if (character == null)
+        //    {
+        //        return 0;
+        //    }
+        //    string responseFromServerActivities = ApiHelper.GetRequest($"https://www.bungie.net/Platform/Destiny2/{character.MembershipType}/Account/{character.MembershipId}/Character/{character.CharacterId}/Stats/Activities/?mode=19&count=30");
+        //    if (responseFromServerActivities == null)
+        //    {
+        //        return 0;
+        //    }
+        //    JObject jsonResponseActivities = JObject.Parse(responseFromServerActivities);
+
+        //    IList<JToken> resultsActivities = jsonResponseActivities["Response"]["activities"].Children().ToList();
+        //    foreach (JToken tokenActivity in resultsActivities)
+        //    {
+        //        BungieAPI.CharacterActivity APIactivity = tokenActivity.ToObject<BungieAPI.CharacterActivity>();
+        //        Activity newActivity = _context.Activity.SingleOrDefault(a => a.InstanceId == APIactivity.activityDetails.instanceId);
+        //        if (newActivity == null)
+        //        {
+        //            newActivity = new Activity()
+        //            {
+        //                InstanceId = APIactivity.activityDetails.instanceId,
+        //                Period = APIactivity.period,
+        //                Mode = 19
+        //            };
+        //            _context.Activity.Add(newActivity);
+        //            _context.SaveChanges();
+        //        }
+
+        //        if (character.CharacterActivities == null)
+        //        {
+        //            character.CharacterActivities = new List<CharacterActivity>();
+        //        }
+        //        if (!character.CharacterActivities.Any(ca => ca.ActivityID == newActivity.ID))
+        //        {
+        //            CharacterActivity newCharacterActivity = new CharacterActivity
+        //            {
+        //                Activity = newActivity,
+        //                Character = character
+        //            };
+
+        //            character.CharacterActivities.Add(newCharacterActivity);
+        //            _context.SaveChanges();
+        //        }
+        //    }
+        //    return 0;
+        //}
 
         [HttpGet]
         [Route("GetAllAssociatedPlayers")]
         public async Task<ActionResult<int>> GetAllAssociatedPlayers()
         {
-            Console.WriteLine("TEST");
             List<Character> characters = await _context.Character.ToListAsync();
 
             int newActivityCount = 0;
@@ -111,31 +169,19 @@ namespace GlickoRank.Controllers
 
             foreach (Character character in characters)
             {
-                Console.WriteLine($"CHARACTER [{character.ID}]");
-
-                string responseFromServerActivities = ApiHelper.GetRequest($"https://www.bungie.net/Platform/Destiny2/{character.MembershipType}/Account/{character.MembershipId}/Character/{character.CharacterId}/Stats/Activities/?mode=19&count=10");
-                JObject jsonResponseActivities = JObject.Parse(responseFromServerActivities);
-
-                IList<JToken> resultsActivities = jsonResponseActivities["Response"]["activities"].Children().ToList();
-                foreach (JToken tokenActivity in resultsActivities)
+                Console.WriteLine("CHARACTER: " + character.ID);
+                IList<Activity> activities = GetCharacterActivities(character.ID, new DateTime(2019, 12, 10));
+                foreach (Activity activity in activities)
                 {
-                    BungieAPI.CharacterActivity APIactivity = tokenActivity.ToObject<BungieAPI.CharacterActivity>();
-                    Activity newActivity = _context.Activity.SingleOrDefault(a => a.InstanceId == APIactivity.activityDetails.instanceId);
-                    if (newActivity == null)
+                    if (activity.ID == 0)
                     {
-                        newActivity = new Activity()
-                        {
-                            InstanceId = APIactivity.activityDetails.instanceId,
-                            Period = APIactivity.period
-                        };
-                        _context.Activity.Add(newActivity);
-                        Console.WriteLine($"[{++newActivityCount}] Add Activity: {newActivity.InstanceId} from {newActivity.Period}");
+                        _context.Activity.Add(activity);
                         _context.SaveChanges();
 
                         /////////////////////////
                         ///
 
-                        string responseFromServerCharacters = ApiHelper.GetRequest($"http://stats.bungie.net/Platform/Destiny2/Stats/PostGameCarnageReport/{newActivity.InstanceId}/");
+                        string responseFromServerCharacters = ApiHelper.GetRequest($"http://stats.bungie.net/Platform/Destiny2/Stats/PostGameCarnageReport/{activity.InstanceId}/");
 
                         JObject jsonResponseCharacters = JObject.Parse(responseFromServerCharacters);
 
@@ -157,8 +203,21 @@ namespace GlickoRank.Controllers
                                 _context.SaveChanges();
                             }
 
+                            if (character.CharacterActivities == null)
+                            {
+                                character.CharacterActivities = new List<CharacterActivity>();
+                            }
+                            if (!character.CharacterActivities.Any(ca => ca.ActivityID == activity.ID))
+                            {
+                                CharacterActivity newCharacterActivity = new CharacterActivity
+                                {
+                                    Activity = activity,
+                                    Character = character
+                                };
 
-
+                                character.CharacterActivities.Add(newCharacterActivity);
+                                _context.SaveChanges();
+                            }
                         }
                         _context.SaveChanges();
                     }
